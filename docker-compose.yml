@@ -1,23 +1,50 @@
+version: '3.8'
+
 networks:
   web4react:
+    driver: bridge
+    attachable: true
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
 
 services:
   backend:
-    build:
-      context: ./
-      dockerfile: ./backend/Dockerfile
+    build: ./backend
     networks:
-      - web4react
+      web4react:
+        aliases:
+          - backend-host
     ports:
       - "3210:3210"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3210/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    build: ./frontend
+    networks:
+      web4react:
+        aliases:
+          - frontend-host
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  nginx:
+    build: ./nginx
+    networks:
+      web4react:
+        aliases:
+          - nginx-host
     ports:
       - "80:80"
-    networks:
-      - web4react
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_started

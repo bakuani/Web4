@@ -1,28 +1,17 @@
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Main from "./components/Main";
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Login from './components/Login';
+import Main from './components/Main';
+import Register from './components/Register';
 
-function App() {
-    const router = createBrowserRouter([
-        {
-            path: "/",
-            element: <Login />,
-        },
-        {
-            path: "/register",
-            element: <Register />,
-        },
-        {
-            path: "/main",
-            element: <Main />,
-        },
-    ]);
-  return (
-      <div className="App">
-        <RouterProvider router={router} />
-      </div>
-  );
-}
+const App = () => {
+    return (
+        <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/main" element={<Main />} />
+            <Route path="/register" element={<Register />} />
+        </Routes>
+    );
+};
 
 export default App;

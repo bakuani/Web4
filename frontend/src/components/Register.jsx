@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./App.css";
 
 const Register = () => {
     const navigate = useNavigate();
     const [registerForm, setRegisterForm] = useState({ username: "", password: "" });
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleChange = (e) => {
         setRegisterForm({ ...registerForm, [e.target.name]: e.target.value });
@@ -19,9 +19,14 @@ const Register = () => {
                 body: JSON.stringify(registerForm),
             });
             const data = await response.json();
-            console.log(data);
+
+            if (response.status === 200) {
+                navigate("/");
+            } else {
+                setErrorMessage(data.message || "Ошибка регистрации.");
+            }
         } catch (error) {
-            console.error("Ошибка при регистрации:", error);
+            setErrorMessage("Ошибка сети. Попробуйте позже.");
         }
     };
 
@@ -36,10 +41,10 @@ const Register = () => {
                 <h2 className="form-title">Регистрация</h2>
                 <form onSubmit={register} className="form">
                     <div className="form-group">
-                        <label htmlFor="newUsername">Логин:</label>
+                        <label htmlFor="username">Логин:</label>
                         <input
                             type="text"
-                            id="newUsername"
+                            id="username"
                             name="username"
                             value={registerForm.username}
                             onChange={handleChange}
@@ -48,10 +53,10 @@ const Register = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="newPassword">Пароль:</label>
+                        <label htmlFor="password">Пароль:</label>
                         <input
                             type="password"
-                            id="newPassword"
+                            id="password"
                             name="password"
                             value={registerForm.password}
                             onChange={handleChange}
@@ -61,6 +66,7 @@ const Register = () => {
                     </div>
                     <button type="submit" className="button">Зарегистрироваться</button>
                 </form>
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <button onClick={() => navigate("/")} className="button">Назад к входу</button>
             </div>
         </div>

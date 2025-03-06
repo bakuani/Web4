@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "./App.css";
 
 const Main = () => {
     const navigate = useNavigate();
@@ -58,7 +57,6 @@ const Main = () => {
                 body: JSON.stringify(newPoint),
             });
 
-            console.log(response);
             const data = await response.json();
 
             if (response.status === 200) {

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./App.css";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -21,8 +20,6 @@ const Login = () => {
             });
             const data = await response.json();
 
-            console.log(data);
-
             if (response.status === 200) {
                 localStorage.setItem("token", data.token);
                 navigate("/main");
@@ -30,7 +27,6 @@ const Login = () => {
                 setErrorMessage("Ошибка входа. Проверьте логин и пароль.");
             }
         } catch (error) {
-            console.error("Ошибка при входе:", error);
             setErrorMessage("Ошибка сети. Попробуйте позже.");
         }
     };
